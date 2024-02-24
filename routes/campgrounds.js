@@ -13,7 +13,11 @@ const upload = multer({ storage }); // jetzt werden die Dateien in cloudinary ge
 
 router.route('/')
     .get(catchAsync(campgrounds.index))
-    .post(isLoggedIn,validateCampground,catchAsync(campgrounds.createCampground));
+    .post(isLoggedIn,
+        upload.array('image'),
+        validateCampground, // eigentlich will man das VOR dem Upload machen 
+            //- aber erst durch den Upload entstehen die Daten über die Bilder
+        catchAsync(campgrounds.createCampground));
     // die untenstehende post route war zum Kennenlernen von multipart Forms
     // .post(upload.array('image'),(req,res) => {
     //     res.send({body:req.body, files:req.files});
