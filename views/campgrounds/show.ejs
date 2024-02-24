@@ -8,7 +8,7 @@ auch wenn es damit im Body und nicht mehr im HEAD steht - technisch erlaubt -->
 <div class="row">
     <div class="col-7">
 
-      <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+      <div id="campgroundCarousel" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
           <% campground.images.forEach((image,i) => { %>
             <div class="carousel-item <%= i===0 ? 'active' : '' %>">
@@ -17,11 +17,11 @@ auch wenn es damit im Body und nicht mehr im HEAD steht - technisch erlaubt -->
           <% }) %>
         </div>
         <% if (campground.images.length > 1) { %>
-          <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-bs-slide="prev">
+          <a class="carousel-control-prev" href="#campgroundCarousel" role="button" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="sr-only"></span>
           </a>
-          <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-bs-slide="next">
+          <a class="carousel-control-next" href="#campgroundCarousel" role="button" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="sr-only"></span>
           </a>
