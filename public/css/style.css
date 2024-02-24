@@ -1,0 +1,29 @@
+.rating {
+    color: white;
+    padding: 0.1rem 0.8rem;
+    border-radius: 25%/50%;
+}
+
+.rating1 {
+    background-color: red;
+}
+
+.rating2 {
+    background-color: orangered;
+}
+
+.rating3 {
+    background-color: orange;
+}
+
+.rating4 {
+    background-color: yellowgreen;
+}
+
+.rating5 {
+    background-color: green;
+}
+
+form[name="changePasswordForm"] input:read-only, form[name="editUserForm"] input:read-only {
+    background-color: lightgray;
+}

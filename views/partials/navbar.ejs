@@ -1,0 +1,33 @@
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Yelp Camp</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/campgrounds">Campgrounds</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/campgrounds/new">New Campground</a>
+          </li>
+        </ul>
+        <div class="navbar-nav ms-auto">
+          <% if (!currentUser) { %> <!-- currentUser kommt aus res.locals.currentUser (und das wird in der middleware aus req.user übernommen ) -->
+            <a class="nav-link" href="/login">Login</a>
+            <a class="nav-link" href="/register">Register</a>
+          <% } else { %>
+            <a class="nav-link" href="/edit">Edit Profile</a>
+            <a class="nav-link" href="/logout">Logout <%= currentUser.username %></a>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+
+  

@@ -1,0 +1,27 @@
+<% if(success && success.length) { %>
+    <div class="row">
+        <!-- dieser Einzeiler macht das gleiche wie die 5 Zeilen beim error flash, aber er manipuliert nur die class von dem div
+        nicht das ganze div - Vorteilhaft, wenn man noch weitere Manipulationen vornehmen will -->
+        <div class=<% if (typeof flashWidth !== 'undefined' && flashWidth === 'small') { %>  "col-6 offset-3">  <% } else { %>  "col">  <% } %>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <%= success %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+<% } %>
+
+<% if(error && error.length) { %>
+    <div class="row">
+        <% if (typeof flashWidth !== 'undefined' && flashWidth === 'small') { %>
+            <div class="col-6 offset-3">
+        <% } else { %>
+            <div class="col">
+        <% } %> 
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <%= error %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+<% } %>

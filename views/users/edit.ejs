@@ -1,0 +1,33 @@
+<% layout('layouts/boilerplate')%>
+
+<div class="col-md-6 offset-md-3">
+    <h1>Edit User</h1>
+    <form name="editUserForm" action="/edit"  method="post" class="validated-form" novalidate>
+        <input class="form-control" type="text" name="_id" hidden value="<%= currentUser._id %>">
+    <div class="mb-3">
+        <label class="form-label" for="username">Username</label>
+        <input class="form-control" type="text" id="username" name="username" value="<%= currentUser.username %>" readonly>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="email">Email address</label>
+        <input class="form-control" type="email" id="email" name="email" value="<%= currentUser.email %>" required>
+        <div class="valid-feedback">Looks good</div>
+        <div class="invalid-feedback">You must enter a email address</div>
+    </div>
+
+<!--    
+    <div class="mb-3">
+        <label class="form-label" for="password">Password</label>
+        <input class="form-control" type="password" id="password" name="password" required>
+        <div class="valid-feedback">Looks good</div>
+        <div class="invalid-feedback">You must enter a password</div>
+    </div>
+-->
+    <div class="mb-3">
+        <label class="form-label" for="displayname">Displayname</label>
+        <input class="form-control" type="text" id="displayname" name="displayname" value="<%= currentUser.displayname %>">
+    </div>
+    <a href="/change-password" class="card-link btn btn-info">Change password</a>
+    <button class="btn btn-success">Save</button>
+</form>
+</div>

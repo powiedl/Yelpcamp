@@ -1,0 +1,48 @@
+<% layout('layouts/boilerplate') %>
+<div class="row">
+    <h1 class="text-center">New Campground</h1>
+    <div class="col-6 offset-3">
+            <!-- novalidate, damit der Browser nicht validiert, sondern das Bootstrap überlässt -->
+            <form action="/campgrounds" method="POST" class="validated-form" novalidate>
+            <div class="mb-3">
+                <label class="form-label" for="title">Title</label>
+                <input class="form-control" type="text" id="title" name="campground[title]" required>
+                <div class="valid-feedback">Looks good</div>
+                <div class="invalid-feedback">You must enter a title for the campground</div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="location">Location</label>
+                <input class="form-control" type="text" id="location" name="campground[location]" required>
+                <div class="valid-feedback">Looks good</div>
+                <div class="invalid-feedback">You must enter a location</div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="image">Image Url</label>
+                <input class="form-control" type="text" id="image" name="campground[image]" required>
+                <div class="valid-feedback">Looks good</div>
+                <div class="invalid-feedback">You must enter an imagle URL</div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="price" id="price-label">Price</label>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">€</span>
+                    <input type="text" class="form-control" id="price" name="campground[price]" aria-label="Price" aria-describedby="price-label" required>
+                    <div class="valid-feedback">Looks good</div>
+                    <div class="invalid-feedback">You must enter a price per night (greater or equal to zero)</div>
+                    </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="description">Description</label>
+                <textarea class="form-control" type="textbox" id="description" name="campground[description]" required></textarea>
+                <div class="valid-feedback">Looks good</div>
+                <div class="invalid-feedback">You must enter a description</div>
+            </div>
+            <div class="mb-3">
+                <button class="btn btn-success">Add Campground</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+    <a href="/campgrounds">All Campgrounds</a>
+
