@@ -1,4 +1,5 @@
 const Campground = require('../models/campground');
+const { cloudinary } = require('../cloudinary');
 const jsonFile = require('jsonfile');
 
 // #region all campgrounds
@@ -55,11 +56,22 @@ module.exports.renderEditForm = async (req, res) => {
 
 module.exports.updateCampground = async (req, res) => {
     const { id } = req.params;
+    //console.log(req.body);
     const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
     const imgs = req.files.map( f => ({ url: f.path, filename: f.filename }));
     campground.images.push(...imgs) // ... spread Operator, holt alle Elemente einzeln aus dem Array heraus
         // sonst hätte man ein Array in das Array eingefügt - und die Validation wäre fehlgeschlagen
     await campground.save();
+    if (req.body.deleteImages) {
+        for (let delImgId of req.body.deleteImages) {
+            const delImg = campground.images.id(delImgId);
+            if (delImg) {
+                await cloudinary.uploader.destroy(delImg.filename);
+            } else {
+            }
+        }
+        await campground.updateOne({$pull: { images: { _id: { $in: req.body.deleteImages }}}});
+    }
     req.flash('success','Successfully updated a campground!');
     res.redirect(`/campgrounds/${campground._id}`)
 };

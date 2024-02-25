@@ -67,3 +67,11 @@ form[name="changePasswordForm"] input:read-only, form[name="editUserForm"] input
 	}
 }
 /* #endregion */
+
+/* #region sizes */
+.size-200 {
+    width:200px;
+    height:200px;
+}
+
+/* #endregion */
