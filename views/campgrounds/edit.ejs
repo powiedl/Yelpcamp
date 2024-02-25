@@ -17,12 +17,6 @@
                     <div class="invalid-feedback">You must enter a location</div>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" for="image">Add images</label>
-                    <!-- <input type="file" name="image" id="image" multiple> -->
-                    <div class="input-group custom-file-button">
-                        <label class="input-group-text" for="inputGroupFile">Choose image(s)</label>
-                        <input type="file" class="form-control" id="inputGroupFile" name="image" multiple>
-                    </div>
                     <div class="mb-3">
                     <label class="form-label" for="price" id="price-label">Price</label>
                     <div class="input-group mb-3">
@@ -37,7 +31,11 @@
                     <textarea class="form-control" type="textbox" id="description" name="campground[description]" required><%= campground.description %></textarea>
                     <div class="valid-feedback">Looks good</div>
                     <div class="invalid-feedback">You must enter a description</div>
-                    </div>
+                </div>
+                <div class="input-group custom-file-button mb-3">
+                    <label class="input-group-text" for="inputGroupFile">Choose image(s)</label>
+                    <input type="file" class="form-control" id="inputGroupFile" name="image" multiple>
+                </div>
                 <div class="mb-3">
                     <button class="btn btn-success">Update Campground</button>
                 </div>
