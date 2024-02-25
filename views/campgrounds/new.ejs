@@ -16,7 +16,10 @@
                 <div class="valid-feedback">Looks good</div>
                 <div class="invalid-feedback">You must enter a location</div>
             </div>
-            <input type="file" name="image" multiple>
+            <div class="input-group custom-file-button">
+                <label class="input-group-text" for="inputGroupFile">Choose image(s)</label>
+                <input type="file" class="form-control" id="inputGroupFile" name="image" multiple>
+            </div>
             <!-- <div class="mb-3">
                 <label class="form-label" for="image">Image Url</label>
                 <input class="form-control" type="text" id="image" name="campground[image]" required>

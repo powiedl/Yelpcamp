@@ -24,10 +24,13 @@
     background-color: green;
 }
 
+/* #region form input:read-only */
 form[name="changePasswordForm"] input:read-only, form[name="editUserForm"] input:read-only {
     background-color: lightgray;
 }
+/* #endregion  */
 
+/* #region end floating (must be used in parent element where floating is used) */
 .clearfix:after {
     /* damit das floaten der beinhaltenden Elemente nach dem Elternelement wieder aufhört
     css: .fl { float: left; } / .fr { float: right }
@@ -40,3 +43,27 @@ form[name="changePasswordForm"] input:read-only, form[name="editUserForm"] input
     display: table;
     clear: both;
   }
+/* #endregion */ 
+
+/* #region Choose File Button */
+/*  from: https://codepen.io/glebkema/pen/VwMQWGE */
+.custom-file-button {
+	input[type="file"] {
+		margin-left: -2px !important;
+
+		&::-webkit-file-upload-button {
+			display: none;
+		}
+		&::file-selector-button {
+			display: none;
+		}
+	}
+
+	&:hover {
+		label {
+			background-color: #dde0e3;
+			cursor: pointer;
+		}
+	}
+}
+/* #endregion */
