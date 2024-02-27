@@ -10,6 +10,8 @@ const ImageSchema = new Schema({
     filename: String
 })
 
+const opts = { toJSON: { virtuals: true }}; // damit virtuals beim JSON.stringify "mitgenommen werden", 
+    // muss dann bei der Definition des Schemas auch noch als Parameter mitgegeben werden
 const CampgroundSchema = new Schema({
     title: String,
     images: [ImageSchema],
@@ -35,7 +37,7 @@ const CampgroundSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref:'User'
     }
-});
+}, opts);
 
 // Thumbnail-URL: (200x200, Seitenverhältnis beibehalten: w_200,h_200,c_limit, z. b: https://res.cloudinary.com/dqsqcmfl9/image/upload/w_200,h_200,c_limit/v1708860833/Yelpcamp/fhraqnfeq4z0ic8wj8yi.jpg
 ImageSchema.methods.getThumbnail = function(px=200) { // weil ein virtual keine Parameter unterstützt, darum eine Instanzmethode machen
@@ -52,6 +54,16 @@ CampgroundSchema.post('findOneAndDelete',async function (doc) {
             }
         })    
     }
+})
+
+// //das funktioniert 
+// CampgroundSchema.virtual('quaxi').get(function() {
+//     console.log('getting quaxi');
+//     return "I AM A POPUP TEXT!!!";
+// })
+
+CampgroundSchema.virtual('properties.popUpMarkup').get(function() {
+    return `<a href="/campgrounds/${this._id}">${this.title}</a>` 
 })
 
 module.exports = mongoose.model('Campground', CampgroundSchema);
