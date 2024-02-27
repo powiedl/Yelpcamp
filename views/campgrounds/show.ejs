@@ -6,7 +6,7 @@ zu verwenden - und nicht in die boilerplate zu integrieren (alternativ könnte m
 auch wenn es damit im Body und nicht mehr im HEAD steht - technisch erlaubt -->
 
 <div class="row">
-    <div class="col-7">
+    <div class="col-6">
 
       <div id="campgroundCarousel" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
@@ -48,7 +48,8 @@ auch wenn es damit im Body und nicht mehr im HEAD steht - technisch erlaubt -->
             </div>
           </div>
     </div>
-    <div class="col-5">
+    <div class="col-6">
+      <div id="map"></div>
       <form action="/campgrounds/<%= campground._id %>/reviews" method="POST" class="validated-form mb-3 reviewForm" novalidate>
         <h2>Leave a Review</h2>
         <div class="mb-3">
@@ -115,4 +116,10 @@ auch wenn es damit im Body und nicht mehr im HEAD steht - technisch erlaubt -->
     </div>
     </div>
 
+  <script>
+    const campground = <%- JSON.stringify(campground) %>
+    console.log('campground (aus Javascript):');
+    console.dir(campground);
+  </script>
+  <script src="/javascripts/showPageMap.js"></script>
 

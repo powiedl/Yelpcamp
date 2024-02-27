@@ -73,5 +73,8 @@ form[name="changePasswordForm"] input:read-only, form[name="editUserForm"] input
     width:200px;
     height:200px;
 }
+/* #endregion */
 
+/* #region map */
+#map { height: 180px; }
 /* #endregion */

@@ -1,6 +1,7 @@
 const Campground = require('../models/campground');
 const { cloudinary } = require('../cloudinary');
 const jsonFile = require('jsonfile');
+const axios = require('axios');
 
 // #region all campgrounds
 module.exports.index = async (req, res) => {
@@ -33,7 +34,12 @@ module.exports.renderNewForm = (req, res) => {
 
 module.exports.createCampground = async (req, res, next) => {
 //    if (!req.body.campground) throw new ExpressError('Invalid Campground Data',400);
+    const geoUrl=`https://api.geoapify.com/v1/geocode/search?text=${req.body.campground.location}&apiKey=${process.env.GEO_API_KEY}`
+    const locationCords = await axios.get(geoUrl);
+    const {features: [{geometry}]} = locationCords.data;
+    // geometry = { type: 'Point', coordinates: [ 15.7504779, 47.8055874 ] }
     const campground = new Campground(req.body.campground);
+    campground.geometry = geometry;
     campground.images = req.files.map( f => ({ url: f.path, filename: f.filename }))
     campground.author = req.user._id;
     await campground.save();
@@ -57,18 +63,22 @@ module.exports.renderEditForm = async (req, res) => {
 module.exports.updateCampground = async (req, res) => {
     const { id } = req.params;
     //console.log(req.body);
+    const geoUrl=`https://api.geoapify.com/v1/geocode/search?text=${req.body.campground.location}&apiKey=${process.env.GEO_API_KEY}`
+    const locationCords = await axios.get(geoUrl);
+    const {features: [{geometry}]} = locationCords.data;
     const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
     const imgs = req.files.map( f => ({ url: f.path, filename: f.filename }));
     campground.images.push(...imgs) // ... spread Operator, holt alle Elemente einzeln aus dem Array heraus
         // sonst hätte man ein Array in das Array eingefügt - und die Validation wäre fehlgeschlagen
+    campground.geometry = geometry;
+    console.dir(campground.geometry);
     await campground.save();
     if (req.body.deleteImages) {
         for (let delImgId of req.body.deleteImages) {
             const delImg = campground.images.id(delImgId);
             if (delImg) {
                 await cloudinary.uploader.destroy(delImg.filename);
-            } else {
-            }
+            } 
         }
         await campground.updateOne({$pull: { images: { _id: { $in: req.body.deleteImages }}}});
     }
