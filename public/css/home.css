@@ -1,0 +1,35 @@
+.cover-container {
+    max-width: 60vw;
+}
+
+body {
+    height: 100vh;
+    background-image: linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.9)),url("https://images.unsplash.com/photo-1520095972714-909e91b038e5?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+    background-size: cover;
+    background-position: center;
+    text-shadow: 0 0.05rem 0.1rem rgba(0,0,0,0.5);
+    box-shadow: inset 0 0 5rem rgba(0,0,0,0.5);
+}
+
+.nav-link {
+    padding: .25rem 0;
+    font-weight: 400;
+    color: rgba(255,255,255,0.5);
+    margin-left: 1rem;
+    border-bottom: 0.25rem transparent solid;
+}
+
+.nav-link.active {
+    color: white;
+    border-bottom-color: white;
+}
+
+.nav-link:hover {
+    border-bottom-color: rgba(255,255,255,0.5);
+    text-shadow: 0;
+}
+
+.btn-secondary,.btn-secondary:hover {
+    color: #999;
+    text-shadow: 0 0.05rem .1rem rgba(0,0,0,0.5);;
+}
