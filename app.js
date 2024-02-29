@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
 const session = require('express-session');
 const flash = require('connect-flash');
+const mongoSanitize = require('express-mongo-sanitize');
 
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
@@ -50,6 +51,7 @@ const sessionConfig = {
 }
 app.use(session(sessionConfig));
 app.use(flash());
+app.use(mongoSanitize()); // entfernt gefährliche Zeichen, z. b. $ aus dem Querystring
 app.use(passport.initialize());
 app.use(passport.session()); // muss nach der Zeile app.use(session(...)); kommen, steht aber auch in der Passport-Doku
 passport.use(new LocalStrategy(User.authenticate())); // die Methode .authenticate ist eines der Dinge die von Passport kommen

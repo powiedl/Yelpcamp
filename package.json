@@ -16,6 +16,7 @@
     "ejs": "^3.1.5",
     "ejs-mate": "^4.0.0",
     "express": "^4.17.1",
+    "express-mongo-sanitize": "^2.2.0",
     "express-session": "^1.18.0",
     "joi": "^17.12.1",
     "jsonfile": "^6.1.0",
