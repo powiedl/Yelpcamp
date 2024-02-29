@@ -5,8 +5,24 @@ const Campground = require('../models/campground');
 const axios = require('axios');
 const Review = require('../models/review');
 const User = require('../models/user');
+const Schema = mongoose.Schema;
+
+const ImageSchema = new Schema({
+    url: String,
+    filename: String
+})
+
+const Image = mongoose.model('Image', ImageSchema);
 
 const images = [];
+const cleanup = false;
+const cleanupImages = false;
+const cleanupCamps = true;
+const cleanupUsers = true;
+const createUsers = false; // wenn cleanup === true ist, werden auf jeden Fall neue User erzeugt
+const maxImg=2; // wieviele (neue) Images sollen von unsplash geholt werden
+const maxCamps=50; // wieviele Camps sollen generiert werden
+const password = 'verybad'; // password for new users
 
 async function seedImg(cnt) {
     images.length = 0; // clears the array
@@ -18,14 +34,24 @@ async function seedImg(cnt) {
                 collections: 1114848,
             },
         })
-        images.push(resp.data.urls.small);
+        const image = new Image({url:resp.data.urls.small});
+        await image.save();
+        //images.push(resp.data.urls.small);
         //console.log(`  image seeded ... ${resp.data.urls.small}'`);
       } catch (err) {
         console.error(err);
-        break;
+        break;        
       }
     }
+    let imgsFromDb = await Image.find();
+    console.log(`  found ${imgsFromDb.length} images in database ...`);
+    for (let imgFromDb of imgsFromDb) {
+        images.push(imgFromDb.url);
+//        console.log(`    using image from '${imgFromDb.url}`);
+    }
+    console.log(`  using ${images.length} different images`);
 }
+
 function generateUser(username='user',domain='@mail.local',count=1) {
     const repeatCharacters=4; // the first repeatCharacters will be randomly repeated in mailaddress
     const maxRepetitions=5; // maximum number of repetitions for a single character
@@ -48,7 +74,7 @@ function generateUser(username='user',domain='@mail.local',count=1) {
     return(result);
 }
 
-mongoose.connect('mongodb://localhost:27017/yelp-camp', {
+mongoose.connect('mongodb://localhost:27017/yelp-camp2', {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true
@@ -64,55 +90,102 @@ db.once("open", () => {
 const sample = array => array[Math.floor(Math.random() * array.length)];
 
 const seedDB = async () => {
-    console.log('deleting all reviews ...');
-    await Review.deleteMany({});
-    console.log('deleting all campgrounds ...');
-    await Campground.deleteMany({});
-    console.log('deleting all users ...')
-    await User.deleteMany({});
-
-    console.log('generate new users ...');
-    let users = generateUser('timi','@generated.local',5);
-    const password = 'verybad';
-    for (let u of users) {
-        const user = new User({email: u.mailaddress, username:u.username});
-        const newUser = await User.register(user,password);
+    let user = null;
+    if (cleanup || cleanupCamps) {
+        console.log('deleting all reviews ...');
+        await Review.deleteMany({});
+        console.log('deleting all campgrounds ...');
+        await Campground.deleteMany({});
     }
-    let user = new User({email:'powidl@mail.anywhere', username:'powidl'});
-    let newUser = await User.register(user,password);
+    if (cleanup || cleanupUsers) {
+        console.log('deleting all users ...');
+        await User.deleteMany({});
+    }
+    if (cleanupImages && !cleanup) {
+        console.log('deleting images ...');
+        await Image.deleteMany({});
+    }
+    if (cleanup || cleanupUsers || createUsers) {
+        console.log('generate new users ...');
+        let users = generateUser('timi','@generated.local',5);
+        for (let u of users) {
+            const user = new User({email: u.mailaddress, username:u.username});
+            const newUser = await User.register(user,password);
+            console.log(`  generated user '${newUser.username}, id='${newUser._id}`);
+        }
+    }
+    user = await User.find({email:'timtom@mail.anywhere', username:'timtom'});
+    if (!user || user.length === 0) {
+        user = new User({email:'tim@mail.anywhere', username:'tim'});
+        newUser = await User.register(user,password);
+        console.log(`  generated user '${newUser.username}, id='${newUser._id}`);
+    }
+
+    user = await User.find({email:'powidl@mail.anywhere', username:'powidl'});
+    if (!user || user.length === 0) {
+        user = new User({email:'powidl@mail.anywhere', username:'powidl'});
+        newUser = await User.register(user,password);
+        console.log(`  generated user '${newUser.username}, id='${newUser._id}`);
+    }
     defaultAuthor=user._id;
-    console.log(`powidl's User._id='${defaultAuthor}'`);
-
-    const camp = new Campground({
-        author: defaultAuthor, // ObjectID of user powidl
-        location: 'Pfaffstätten, Austria',
-        title: 'Powidl Camp',
-        image: 'https://images.unsplash.com/photo-1594060026447-83de545e0c22?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Unde non cupiditate quaerat expedita maxime dolores autem harum reiciendis consequatur distinctio mollitia voluptatem, accusantium incidunt earum necessitatibus tenetur, quas est sit!            Aspernatur eveniet sit, possimus blanditiis laudantium praesentium quas, quisquam similique nihil omnis veniam, cum distinctio odio. Veritatis perferendis quibusdam minus molestias adipisci atque minima obcaecati sint, illo dolorum deleniti. Nisi!',
-        price:99 // Abkürzung für price: price
-    })
-    await camp.save();
-
-    user = new User({email:'tim@mail.anywhere', username:'tim'});
-    newUser = await User.register(user,password);
-
+    console.log(`default Author Id:'${defaultAuthor}'`);
+    
     console.log('generate new campgrounds ...');
-    const maxImg=25;
     await seedImg(maxImg);
-    for (let i = 0; i < 50; i++) {
+    if (cleanup || cleanupCamps) {
+        const imgCnt = Math.floor(Math.random()*2)+1;
+        const curImages = [];
+        for (let curImg=0;curImg<imgCnt;curImg++) {
+            curImages.push({
+                url: images[Math.floor(Math.random()*(images.length))],
+                filename: ''
+            })
+        }
+        const camp = new Campground({
+            author: defaultAuthor, // ObjectID of user powidl
+            location: 'Pfaffstätten, Austria',
+            title: 'Powidl Camp',
+            images: curImages,
+            description: 'Pfaffstätten liegt im Industrieviertel in Niederösterreich. Die Fläche der Marktgemeinde umfasst 7,81 Quadratkilometer. 35,55 Prozent der Fläche sind bewaldet. Die höchste Erhebung ist der Pfaffstättner Kogel im Anningermassiv. Ortsteile sind Einöde und Pfaffstätten. Der bekannte Weinort liegt direkt an der Thermenlinie, wobei der Ortsteil Pfaffstätten im ebenen Teil der Gemeinde liegt, während der Ortsteil Einöde schon im Wienerwald liegt.',
+            price:99 ,
+            geometry: {
+                type: "Point",
+                coordinates: [
+                    16.260432705650416,
+                    48.00725562942716
+                ]
+            } 
+        })
+        await camp.save();
+    }
+    for (let i = 0; i < maxCamps; i++) {
         const random1000 = Math.floor(Math.random() * 1000);
         const location = `${cities[random1000].city}, ${cities[random1000].state}`;
         const title = `${sample(descriptors)} ${sample(places)}`;
         const price = Math.floor(Math.random()*40+24);
-        const imgSource = images[Math.floor(Math.random()*maxImg)];
-        console.log(`Seeding '${title}' at '${location}'. Price = ${price} and image='${imgSource}'`);
+        const imgCnt = Math.floor(Math.random()*2)+1;
+        const curImages = [];
+        for (let curImg=0;curImg<imgCnt;curImg++) {
+            curImages.push({
+                url: images[Math.floor(Math.random()*(images.length))],
+                filename: ''
+            })
+        }
+        console.log(`Seeding '${title}' at '${location}'. Price = ${price}, imgCnt=${imgCnt}, curImages.length=${curImages.length}'`);
         const camp = new Campground({
             author: defaultAuthor, // ObjectID of user powidl
             location: location,
             title: title,
-            image: imgSource, //'https://picsum.photos/400', // 'https://source.unsplash.com/collection/473251',
+            images: curImages, //'https://picsum.photos/400', // 'https://source.unsplash.com/collection/473251',
             description: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Unde non cupiditate quaerat expedita maxime dolores autem harum reiciendis consequatur distinctio mollitia voluptatem, accusantium incidunt earum necessitatibus tenetur, quas est sit!            Aspernatur eveniet sit, possimus blanditiis laudantium praesentium quas, quisquam similique nihil omnis veniam, cum distinctio odio. Veritatis perferendis quibusdam minus molestias adipisci atque minima obcaecati sint, illo dolorum deleniti. Nisi!',
-            price // Abkürzung für price: price
+            price, // Abkürzung für price: price
+            geometry: {
+                type: "Point",
+                coordinates: [
+                    cities[random1000].longitude,
+                    cities[random1000].latitude,
+                ]
+            } 
         })
         await camp.save();
     }
@@ -120,4 +193,5 @@ const seedDB = async () => {
 
 seedDB().then(() => {
     mongoose.connection.close();
+    console.log('Database disconnected');
 })
