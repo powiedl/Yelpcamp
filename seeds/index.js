@@ -17,8 +17,8 @@ const Image = mongoose.model('Image', ImageSchema);
 const images = [];
 const cleanup = false;
 const cleanupImages = false;
-const cleanupCamps = true;
-const cleanupUsers = true;
+const cleanupCamps = false;
+const cleanupUsers = false;
 const createUsers = false; // wenn cleanup === true ist, werden auf jeden Fall neue User erzeugt
 const maxImg=2; // wieviele (neue) Images sollen von unsplash geholt werden
 const maxCamps=50; // wieviele Camps sollen generiert werden
@@ -110,22 +110,40 @@ const seedDB = async () => {
         let users = generateUser('timi','@generated.local',5);
         for (let u of users) {
             const user = new User({email: u.mailaddress, username:u.username});
-            const newUser = await User.register(user,password);
-            console.log(`  generated user '${newUser.username}, id='${newUser._id}`);
+            try {
+                newUser = await User.register(user,password);
+                console.log(`  generated user '${newUser.username}, id='${newUser._id}`);
+            } catch (e) {
+                if (typeof e === 'UserExistsError') {
+                    console.log(`  User '${user.username}' already exists. Skipping creation of this user.`);
+                }
+            }
         }
     }
     user = await User.find({email:'timtom@mail.anywhere', username:'timtom'});
     if (!user || user.length === 0) {
         user = new User({email:'tim@mail.anywhere', username:'tim'});
-        newUser = await User.register(user,password);
-        console.log(`  generated user '${newUser.username}, id='${newUser._id}`);
+        try {
+            newUser = await User.register(user,password);
+            console.log(`  generated user '${newUser.username}, id='${newUser._id}`);
+        } catch (e) {
+            if (typeof e === 'UserExistsError') {
+                console.log(`  User '${user.username}' already exists. Skipping creation of this user.`);
+            }
+        }
     }
 
     user = await User.find({email:'powidl@mail.anywhere', username:'powidl'});
     if (!user || user.length === 0) {
         user = new User({email:'powidl@mail.anywhere', username:'powidl'});
-        newUser = await User.register(user,password);
-        console.log(`  generated user '${newUser.username}, id='${newUser._id}`);
+        try {
+            newUser = await User.register(user,password);
+            console.log(`  generated user '${newUser.username}, id='${newUser._id}`);
+        } catch (e) {
+            if (typeof e === 'UserExistsError') {
+                console.log(`  User '${user.username}' already exists. Skipping creation of this user.`);
+            }
+        }
     }
     defaultAuthor=user._id;
     console.log(`default Author Id:'${defaultAuthor}'`);
