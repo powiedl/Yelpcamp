@@ -44,7 +44,6 @@ module.exports.createCampground = async (req, res, next) => {
     campground.images = req.files.map( f => ({ url: f.path, filename: f.filename }))
     campground.author = req.user._id;
     await campground.save();
-    console.log(campground);
     req.flash('success','Successfully made a new campground!');
     res.redirect(`/campgrounds/${campground._id}`)
 };
@@ -72,7 +71,6 @@ module.exports.updateCampground = async (req, res) => {
     campground.images.push(...imgs) // ... spread Operator, holt alle Elemente einzeln aus dem Array heraus
         // sonst hätte man ein Array in das Array eingefügt - und die Validation wäre fehlgeschlagen
     campground.geometry = geometry;
-    console.dir(campground.geometry);
     await campground.save();
     if (req.body.deleteImages) {
         for (let delImgId of req.body.deleteImages) {

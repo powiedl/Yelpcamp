@@ -234,5 +234,4 @@ app.use((err,req,res,next) => {
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Serving on port ${port}`);
-    console.log('remember the owner used by seeding is "Tim" with a password of "TimTom"');
 })
