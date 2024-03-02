@@ -110,11 +110,12 @@ app.use(
 //app.use(helmet({contentSecurityPolicy : false }));
 // #endregion
 
+const sessionSecret = process.env.SESSION_STORE_SECRET || 'thisIsMyDevelopmentSessionSecret';
 const store = MongoStore.create({
     mongoUrl: dbUrl,
     touchAfter: 24 * 60 * 60,
     crypto: {
-        secret: process.env.SESSION_STORE_SECRET,
+        secret: sessionSecret,
     }
 });
 
@@ -127,7 +128,7 @@ const sessionConfig = {
     name: 'meineSessionDamitManNichtWeissDassEsDieSessionIst', // sonst hat der Cookie einen Default Namen 'connect.sid' - damit kann ein Angreifer wissen: "dass ist der spannende Cookie"
     resave: false,
     saveUninitialized: true,
-    secret: process.env.SESSION_STORE_SECRET,
+    secret: sessionSecret,
     cookie: {
         httpOnly: true,
         //secure: true, // damit funktioniert das Cookie nur über HTTPS (was wir nicht haben, daher muss man es ausblenden)
@@ -228,7 +229,8 @@ app.use((err,req,res,next) => {
     res.status(statusCode).render('error', { err });
 })
 
-app.listen(3000, () => {
-    console.log('Serving on port 3000');
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Serving on port ${port}`);
     console.log('remember the owner used by seeding is "Tim" with a password of "TimTom"');
 })
