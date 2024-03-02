@@ -15,11 +15,12 @@ const methodOverride = require('method-override');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user');
-// const helmet = require('helmet'); // verlangt jetzt scheinbar https
+const helmet = require('helmet'); // verlangt jetzt scheinbar https
 
 const userRoutes = require('./routes/users');
 const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews');
+const { match } = require('assert');
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp2', {
     useNewUrlParser: true,
@@ -52,7 +53,6 @@ const scriptSrcUrls = [
     "https://cdnjs.cloudflare.com/",
     "https://cdn.jsdelivr.net",
     "https://unpkg.com/",
-    "http:///",
 ];
 const styleSrcUrls = [
     "http://r51:3000/",
@@ -64,7 +64,6 @@ const styleSrcUrls = [
     "https://use.fontawesome.com/",
     "https://cdn.jsdelivr.net",
     "https://unpkg.com/",
-    "http:///",
 ];
 const connectSrcUrls = [
     "http://r51:3000/",
@@ -72,11 +71,13 @@ const connectSrcUrls = [
     "https://a.tiles.mapbox.com/",
     "https://b.tiles.mapbox.com/",
     "https://events.mapbox.com/",
-    "http:///",
+    
 ];
 const fontSrcUrls = [];
-/*app.use(
+
+app.use(
     helmet.contentSecurityPolicy({
+        useDefaults: false,
         directives: {
             defaultSrc: [],
             connectSrc: ["'self'", ...connectSrcUrls],
@@ -90,12 +91,21 @@ const fontSrcUrls = [];
                 "data:",
                 "https://res.cloudinary.com/dqsqcmfl9/", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT! 
                 "https://images.unsplash.com/",
+                "https://unpkg.com/leaflet@1.9.4/",
+                "http://a.tile.osm.org/",
+                "http://b.tile.osm.org/",
+                "http://c.tile.osm.org/",
+                "http://d.tile.osm.org/",
+                "https://a.tile.openstreetmap.org/",
+                "https://b.tile.openstreetmap.org/",
+                "https://c.tile.openstreetmap.org/",
+                "https://d.tile.osm.org/",
             ],
             fontSrc: ["'self'", ...fontSrcUrls],
         },
     })
 );
-*/
+
 //app.use(helmet({contentSecurityPolicy : false }));
 // #endregion
 
