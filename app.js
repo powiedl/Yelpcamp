@@ -15,6 +15,7 @@ const methodOverride = require('method-override');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user');
+// const helmet = require('helmet'); // verlangt jetzt scheinbar https
 
 const userRoutes = require('./routes/users');
 const campgroundRoutes = require('./routes/campgrounds');
@@ -39,12 +40,74 @@ app.engine('ejs',ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
 app.use(express.static(path.join(__dirname,'public'))); // damit wird der Inhalt vom Ordner public "Teil" der Applikation und kann verwendet werden (wir verwenden ein css)
+//app.use(helmet({contentSecurityPolicy : false })); // absichern der Header
+// #region hemlet configuration 
+
+const scriptSrcUrls = [
+    "http://r51:3000/",
+    "https://stackpath.bootstrapcdn.com/",
+    "https://api.tiles.mapbox.com/",
+    "https://api.mapbox.com/",
+    "https://kit.fontawesome.com/",
+    "https://cdnjs.cloudflare.com/",
+    "https://cdn.jsdelivr.net",
+    "https://unpkg.com/",
+    "http:///",
+];
+const styleSrcUrls = [
+    "http://r51:3000/",
+    "https://kit-free.fontawesome.com/",
+    "https://stackpath.bootstrapcdn.com/",
+    "https://api.mapbox.com/",
+    "https://api.tiles.mapbox.com/",
+    "https://fonts.googleapis.com/",
+    "https://use.fontawesome.com/",
+    "https://cdn.jsdelivr.net",
+    "https://unpkg.com/",
+    "http:///",
+];
+const connectSrcUrls = [
+    "http://r51:3000/",
+    "https://api.mapbox.com/",
+    "https://a.tiles.mapbox.com/",
+    "https://b.tiles.mapbox.com/",
+    "https://events.mapbox.com/",
+    "http:///",
+];
+const fontSrcUrls = [];
+/*app.use(
+    helmet.contentSecurityPolicy({
+        directives: {
+            defaultSrc: [],
+            connectSrc: ["'self'", ...connectSrcUrls],
+            scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+            styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+            workerSrc: ["'self'", "blob:"],
+            objectSrc: [],
+            imgSrc: [
+                "'self'",
+                "blob:",
+                "data:",
+                "https://res.cloudinary.com/dqsqcmfl9/", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT! 
+                "https://images.unsplash.com/",
+            ],
+            fontSrc: ["'self'", ...fontSrcUrls],
+        },
+    })
+);
+*/
+//app.use(helmet({contentSecurityPolicy : false }));
+// #endregion
+
+
 const sessionConfig = {
     secret: 'thisShouldBeABetterSecretAndItShouldNotBeDefinedDirectlyInTheSourcecode',
     resave: false,
     saveUninitialized: true,
     cookie: {
+        name: 'meineSessionDamitManNichtWeissDassEsDieSessionIst', // sonst hat der Cookie einen Default Namen 'connect.sid' - damit kann ein Angreifer wissen: "dass ist der spannende Cookie"
         httpOnly: true,
+        //secure: true, // damit funktioniert das Cookie nur über HTTPS (was wir nicht haben, daher muss man es ausblenden)
         expires:Date.now() + 1000*60*60*24*7,
         maxAge: 1000*60*60*24*7
     }    
