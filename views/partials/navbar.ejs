@@ -17,7 +17,7 @@
           </li>
         </ul>
         <div class="navbar-nav ms-auto">
-          <% if (!currentUser) { %> <!-- currentUser kommt aus res.locals.currentUser (und das wird in der middleware aus req.user übernommen ) -->
+          <% if (typeof currentUser === 'undefined' || !currentUser) { %> <!-- currentUser kommt aus res.locals.currentUser (und das wird in der middleware aus req.user übernommen ) -->
             <a class="nav-link" href="/login">Login</a>
             <a class="nav-link" href="/register">Register</a>
           <% } else { %>

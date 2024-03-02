@@ -7,6 +7,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const flash = require('connect-flash');
 const mongoSanitize = require('express-mongo-sanitize');
 
@@ -21,9 +22,8 @@ const userRoutes = require('./routes/users');
 const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews');
 const { match } = require('assert');
-const dbUrl = process.env.DB_URL;
-// mongoose.connect(dbUrl, {
-mongoose.connect('mongodb://localhost:27017/yelp-camp2', {
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp2';
+mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
@@ -110,13 +110,25 @@ app.use(
 //app.use(helmet({contentSecurityPolicy : false }));
 // #endregion
 
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    touchAfter: 24 * 60 * 60,
+    crypto: {
+        secret: process.env.SESSION_STORE_SECRET,
+    }
+});
+
+store.on('error',function (e) {
+    console.log('SESSION STORE ERROR',e);
+})
 
 const sessionConfig = {
-    secret: 'thisShouldBeABetterSecretAndItShouldNotBeDefinedDirectlyInTheSourcecode',
+    store: store,
+    name: 'meineSessionDamitManNichtWeissDassEsDieSessionIst', // sonst hat der Cookie einen Default Namen 'connect.sid' - damit kann ein Angreifer wissen: "dass ist der spannende Cookie"
     resave: false,
     saveUninitialized: true,
+    secret: process.env.SESSION_STORE_SECRET,
     cookie: {
-        name: 'meineSessionDamitManNichtWeissDassEsDieSessionIst', // sonst hat der Cookie einen Default Namen 'connect.sid' - damit kann ein Angreifer wissen: "dass ist der spannende Cookie"
         httpOnly: true,
         //secure: true, // damit funktioniert das Cookie nur über HTTPS (was wir nicht haben, daher muss man es ausblenden)
         expires:Date.now() + 1000*60*60*24*7,
