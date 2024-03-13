@@ -8,10 +8,10 @@ const querystring = require('querystring');
 
 
 module.exports.getLatLon = (ort) => {
-    console.log(`GEOAPIFY_KEY= '${process.env.GEOAPIFY_KEY}'`)
+//    console.log(`GEOAPIFY_KEY= '${process.env.GEOAPIFY_KEY}'`)
     const query = {text:ort,apiKey:process.env.GEOAPIFY_KEY};
     const urlQuery = querystring.stringify(query);
-    console.log(`urlQuery: '${urlQuery}'`);
+    //console.log(`urlQuery: '${urlQuery}'`);
 
 /*    const config = {
         method: 'get',
