@@ -9,6 +9,13 @@ module.exports.index = async (req, res) => {
 //    console.log('campgrounds[0].properties=',campgrounds[0].properties);
     res.render('campgrounds/index', { campgrounds })
 };
+
+module.exports.indexOfUser = async (req, res) => {
+    const userId = req.user._id;
+    const campgrounds = await Campground.find({author: userId});
+//    console.log('campgrounds[0].properties=',campgrounds[0].properties);
+    res.render('campgrounds/index', { campgrounds, scope:'my' })
+};
 // #endregion all campgrounds
 
 // #region show one campground

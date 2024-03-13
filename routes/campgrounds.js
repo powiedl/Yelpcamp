@@ -26,6 +26,9 @@ router.route('/')
 router.route('/new')
     .get(isLoggedIn,campgrounds.renderNewForm);
 
+router.route('/user')
+    .get(isLoggedIn,catchAsync(campgrounds.indexOfUser));
+
 router.route('/:id')
     .get(catchAsync(campgrounds.renderShowForm))
     .put(isLoggedIn, 
