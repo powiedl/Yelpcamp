@@ -177,6 +177,9 @@ app.use('/',userRoutes);
 app.get('/', (req, res) => {
     res.render('home')
 });
+app.get('/changelog', (req, res) => {
+    res.render('changelog')
+});
 
 function generateUser(username='user',domain='@mail.local',count=1) {
     const repeatCharacters=4; // the first repeatCharacters will be randomly repeated in mailaddress

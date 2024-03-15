@@ -30,6 +30,15 @@ form[name="changePasswordForm"] input:read-only, form[name="editUserForm"] input
 }
 /* #endregion  */
 
+/* #region navbar */
+.navbar-brand {
+    opacity: 60%;
+}
+.navbar-brand:hover {
+    opacity: 80%;
+}
+/* #endregion */
+
 /* #region end floating (must be used in parent element where floating is used) */
 .clearfix:after {
     /* damit das floaten der beinhaltenden Elemente nach dem Elternelement wieder aufhört
