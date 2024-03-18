@@ -26,10 +26,24 @@ body {
 
 .nav-link:hover {
     border-bottom-color: rgba(255,255,255,0.5);
-    text-shadow: 0;
+    text-shadow: none;
 }
 
 .btn-secondary,.btn-secondary:hover {
     color: #999;
-    text-shadow: 0 0.05rem .1rem rgba(0,0,0,0.5);;
+    text-shadow: 0 0.05rem .1rem rgba(0,0,0,0.5);
+}
+
+.title {
+    text-shadow: 0 0.2rem .4rem rgba(0,0,0,0.5);
+    color: #fff;
+    transition-duration: 0.5s;
+    transition-property: color;
+}
+
+.title:hover {
+    color: #dcdc86;
+    text-shadow:none;
+    transition-duration: 0.5s;
+    transition-property: color;
 }
