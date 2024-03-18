@@ -1,6 +1,11 @@
 :root {
+    --card-campground-bg-color: #f8faec;
+    --card-campground-box-shadow: 3px 3px 3px 2px rgba(226,229,194,1);
+    --card-user-bg-color: #f0eef8;
+    --card-user-box-shadow: 3px 3px 3px 2px rgb(220, 212, 248);
     --card-bg-color: #f8faec;
     --card-box-shadow: 3px 3px 3px 2px rgba(226,229,194,1);
+
 }
 
 .rating {
@@ -27,6 +32,16 @@
 
 .rating5 {
     background-color: green;
+}
+
+.card-campground-bg-color {
+    background-color: var(--card-campground-bg-color);
+    box-shadow: var(--card-campground-box-shadow);
+}
+
+.card-user-bg-color {
+    background-color: var(--card-user-bg-color);
+    box-shadow: var(--card-user-box-shadow);
 }
 
 .card-bg-color {
