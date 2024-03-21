@@ -17,6 +17,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 const helmet = require('helmet'); // verlangt jetzt scheinbar https
+const log = require('./models/log');
 
 const userRoutes = require('./routes/users');
 const campgroundRoutes = require('./routes/campgrounds');
@@ -160,11 +161,21 @@ app.use((req,res,next) => {
     return next();
 })
 
-app.use((req,res,next) => {
+app.use(async(req,res,next) => {
     //my little logging ...
     const jetzt=new Date().toJSON();
     //console.log('******************************************');
-    console.log(`${jetzt}: method=${req.method},url='${req.url}',originalUrl='${req.originalUrl}'`); // spannenderweise sind baseurl und originalurl "leer"
+    //console.log(`${jetzt}: method=${req.method},url='${req.url}',originalUrl='${req.originalUrl}'`); // spannenderweise sind baseurl und originalurl "leer"
+    
+    const logEntry = new log();
+    logEntry.originalUrl = req.originalUrl;
+    logEntry.ips = req.ips;
+    logEntry.method = req.method;
+    logEntry.protocol = req.protocol;
+    logEntry.timeStamp = jetzt;
+    logEntry.username = req.user ? req.user.username : 'anonymous';
+    await logEntry.save();
+
     //console.log(req.session);
     return next();
 })
