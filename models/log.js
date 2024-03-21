@@ -5,10 +5,11 @@ const logSchema = new Schema({
     timeStamp : { type : Date, default: Date.now },
     originalUrl: String,
     hostname: String,
-    ips: [String],
+    ip: String,
     method: String,
     protocol: String,
-    username: String
+    username: String,
+    appVersion: String
 });
 
 module.exports = mongoose.model('log',logSchema);

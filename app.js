@@ -23,6 +23,7 @@ const userRoutes = require('./routes/users');
 const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews');
 const { match } = require('assert');
+const appVersion = '24.321.1';
 const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp2';
 console.log(`dbUrl ='${dbUrl}'`);
 
@@ -169,11 +170,12 @@ app.use(async(req,res,next) => {
     
     const logEntry = new log();
     logEntry.originalUrl = req.originalUrl;
-    logEntry.ips = req.ips;
+    logEntry.ip = req.ip;
     logEntry.method = req.method;
     logEntry.protocol = req.protocol;
     logEntry.timeStamp = jetzt;
     logEntry.username = req.user ? req.user.username : 'anonymous';
+    logEntry.appVersion = appVersion;
     await logEntry.save();
 
     //console.log(req.session);
@@ -189,7 +191,7 @@ app.get('/', (req, res) => {
     res.render('home')
 });
 app.get('/changelog', (req, res) => {
-    res.render('changelog')
+    res.render('changelog', { appVersion:appVersion })
 });
 
 function generateUser(username='user',domain='@mail.local',count=1) {
