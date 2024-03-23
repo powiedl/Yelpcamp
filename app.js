@@ -169,9 +169,14 @@ app.use(async(req,res,next) => {
     //console.log(`${jetzt}: method=${req.method},url='${req.url}',originalUrl='${req.originalUrl}'`); // spannenderweise sind baseurl und originalurl "leer"
     console.log('req.socket.remoteAddress=',req.socket.remoteAddress);
     console.log('req.header.x-forwarded-for=',req.header('x-forwarded-for') || []);
+    const ips = req.header('x-forwarded-for') || req.socket.remoteAddress;
+    const arrIps = ips.split(',');
+    const clientIp = arrIps[0]
+    const otherIps = arrIps.slice(1,);
     const logEntry = new log();
     logEntry.originalUrl = req.originalUrl;
-    logEntry.ip = req.header('x-forwarded-for') || req.socket.remoteAddress;
+    logEntry.clientIp = clientIp;
+    logEntry.otherIps = otherIps;
     logEntry.method = req.method;
     logEntry.protocol = req.protocol;
     logEntry.timeStamp = jetzt;
