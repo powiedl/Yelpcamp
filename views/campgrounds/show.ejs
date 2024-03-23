@@ -37,7 +37,8 @@ auch wenn es damit im Body und nicht mehr im HEAD steht - technisch erlaubt -->
               <li class="list-group-item text-muted"><%= campground.location %></li>
               <li class="list-group-item">€ <%= campground.price %>/night</li>
             </ul>
-            <% if(currentUser._id === campground.author._id) { %>
+            <% 
+            if (isAuthenticated && campground.author.equals(currentUser._id)) { %>
               <div class="card-body">
                 <a href="/campgrounds/<%= campground._id %>/edit" class="card-link btn btn-info">Edit</a>
                 <form class="d-inline" action="/campgrounds/<%=campground._id%>?_method=DELETE" method="POST">
