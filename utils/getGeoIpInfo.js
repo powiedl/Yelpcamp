@@ -8,17 +8,22 @@ module.exports=async function (ip,cookies) {
     //console.log('geoipinfo url="',url,'"');
     let country = cookies?.ipCountry || 'abstractAPI';
     let city = cookies?.ipCity || 'abstractAPI';
-    if (country === 'abstractAPI' || city === 'abstractAPI') {
-        const res = await axios.get(url);
-        if (res.statusText === 'OK') {
-//            jsonFile.writeFile('/tmp/abstractAPI.json',res.data);
-            ({country,city} = res.data);
-            country = country || 'unknown'; // wenn man eine private IP hat, bekommt man von AbstractAPI ein null als Country retour
-            city = city || 'unknown'; // wenn man eine private IP hat, bekommt man von AbstractAPI ein null als City retour
-        } else {
-            country = 'unknown';
-            city = 'unknown'
+    if (false) {
+        if (country === 'abstractAPI' || city === 'abstractAPI') {
+            const res = await axios.get(url);
+            if (res.statusText === 'OK') {
+    //            jsonFile.writeFile('/tmp/abstractAPI.json',res.data);
+                ({country,city} = res.data);
+                country = country || 'unknown'; // wenn man eine private IP hat, bekommt man von AbstractAPI ein null als Country retour
+                city = city || 'unknown'; // wenn man eine private IP hat, bekommt man von AbstractAPI ein null als City retour
+            } else {
+                country = 'unknown';
+                city = 'unknown'
+            }
         }
+    } else {
+        country = 'unknown';
+        city = 'unknown'
     }
     return({country:country,city:city});
 }
