@@ -26,22 +26,25 @@ auch wenn es damit im Body und nicht mehr im HEAD steht - technisch erlaubt -->
           </a>
         <% } %>
       </div>
-
+<% console.log('campground.author:',campground.author); %>
         <div class="card mb-3">
             <div class="card-body">
               <h5 class="card-title"><%= campground.title %></h5>
+              <h6 class="card-subtitle ms-3">(by <%= campground.author.showname %>)</h6>
               <p class="card-text"><%= campground.description %></p>
             </div>
             <ul class="list-group list-group-flush">
               <li class="list-group-item text-muted"><%= campground.location %></li>
               <li class="list-group-item">€ <%= campground.price %>/night</li>
             </ul>
-            <div class="card-body">
+            <% if(currentUser._id === campground.author._id) { %>
+              <div class="card-body">
                 <a href="/campgrounds/<%= campground._id %>/edit" class="card-link btn btn-info">Edit</a>
                 <form class="d-inline" action="/campgrounds/<%=campground._id%>?_method=DELETE" method="POST">
                     <button class="btn btn-danger">Delete</button>
                 </form>
-            </div>
+              </div>
+            <% } %>
             <div class="card-footer text-body-secondary">
                 <a href="/campgrounds" class="card-link">All Campgrounds</a>
             </div>

@@ -31,7 +31,7 @@ module.exports.renderShowForm = async (req, res) => {
         return res.redirect('/campgrounds');
     }
     jsonFile.writeFile('/tmp/campground-show.json',campground);
-    res.render('campgrounds/show', { campground, isAuthenticated: req.isAuthenticated() });
+    res.render('campgrounds/show', { campground, isAuthenticated: req.isAuthenticated(),currentUser: res.locals.currentUser });
 };
 // #endregion show one campground
 
