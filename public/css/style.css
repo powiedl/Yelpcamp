@@ -8,6 +8,7 @@
 
 }
 
+/* #region review-rating  */
 .rating {
     color: white;
     padding: 0.1rem 0.8rem;
@@ -33,7 +34,9 @@
 .rating5 {
     background-color: green;
 }
+/* #endregion */
 
+/* #region card background */
 .card-campground-bg-color {
     background-color: var(--card-campground-bg-color);
     box-shadow: var(--card-campground-box-shadow);
@@ -48,6 +51,7 @@
     background-color: var(--card-bg-color);
     box-shadow: var(--card-box-shadow);
 }
+/* #endregion */
 
 /* #region form input:read-only */
 form[name="changePasswordForm"] input:read-only, form[name="editUserForm"] input:read-only {
@@ -122,3 +126,17 @@ form[name="changePasswordForm"] input:read-only, form[name="editUserForm"] input
     width:100%;
 }
 /* #endregion */
+
+/* #region changelog/todos */
+.todo-author {
+    border: .05rem solid black;
+    border-radius: .5rem;
+    padding: .1rem .3rem;
+    margin: .1rem .2rem;
+    font-size: .7rem;
+    font-weight: bold;
+    letter-spacing: -0.02rem; 
+    background-color: aquamarine;
+    position: relative;
+    top: -.3rem;
+}
