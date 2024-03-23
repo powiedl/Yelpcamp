@@ -10,7 +10,9 @@ const logSchema = new Schema({
     method: String,
     protocol: String,
     username: String,
-    appVersion: String
+    appVersion: String,
+    country: String,
+    city: String
 });
 
 module.exports = mongoose.model('log',logSchema);

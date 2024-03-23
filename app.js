@@ -10,8 +10,11 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const flash = require('connect-flash');
 const mongoSanitize = require('express-mongo-sanitize');
+const cookie = require('cookie');
+const cookieParser = require('cookie-parser');
 
 const ExpressError = require('./utils/ExpressError');
+const geoIpInfo = require('./utils/getGeoIpInfo');
 const methodOverride = require('method-override');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
@@ -148,7 +151,7 @@ app.use(passport.session()); // muss nach der Zeile app.use(session(...)); komme
 passport.use(new LocalStrategy(User.authenticate())); // die Methode .authenticate ist eines der Dinge die von Passport kommen
 passport.serializeUser(User.serializeUser()); // wie bekommt man einen User in die Session
 passport.deserializeUser(User.deserializeUser()); // wie bekommt man einen User aus der Session heraus, beides kommt von Passport
-
+app.use(cookieParser()); // Cookie-Parser
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
@@ -167,12 +170,11 @@ app.use(async(req,res,next) => {
     const jetzt=new Date().toJSON();
     //console.log('******************************************');
     //console.log(`${jetzt}: method=${req.method},url='${req.url}',originalUrl='${req.originalUrl}'`); // spannenderweise sind baseurl und originalurl "leer"
-    console.log('req.socket.remoteAddress=',req.socket.remoteAddress);
-    console.log('req.header.x-forwarded-for=',req.header('x-forwarded-for') || []);
     const ips = req.header('x-forwarded-for') || req.socket.remoteAddress;
     const arrIps = ips.split(',');
     const clientIp = arrIps[0]
     const otherIps = arrIps.slice(1,);
+    const {country,city} = await geoIpInfo(clientIp,req.cookies);
     const logEntry = new log();
     logEntry.originalUrl = req.originalUrl;
     logEntry.clientIp = clientIp;
@@ -182,6 +184,8 @@ app.use(async(req,res,next) => {
     logEntry.timeStamp = jetzt;
     logEntry.username = req.user ? req.user.username : 'anonymous';
     logEntry.appVersion = appVersion;
+    logEntry.country = country;
+    logEntry.city = city;
     await logEntry.save();
 
     //console.log(req.session);
@@ -202,9 +206,24 @@ app.get('/changelog', (req, res) => {
 app.get('/todos', (req, res) => {
     res.render('todos', { appVersion:appVersion })
 });
-app.get('/ipinfo',(req,res) => {
-    const ipinfo={remoteAddress:req.socket.remoteAddress,xForwardedFor:req.header('x-forwarded-for') || []};
-    res.send(ipinfo);
+app.get('/ipinfo',async (req,res) => {
+    const ips = req.header('x-forwarded-for') || req.socket.remoteAddress;
+    const arrIps = ips.split(',');
+    const clientIp = arrIps[0]
+    const otherIps = arrIps.slice(1,);
+    const {country,city} = await geoIpInfo(clientIp,req.cookies);
+    console.log('country=',country,'city=',city);
+    const ipInfo={clientIp: clientIp, otherIps:otherIps,country:country,city:city};
+    res.cookie('clientIp',clientIp, { 
+        maxAge: 60*10*1000 // 10 Minuten
+    });
+    res.cookie('ipCountry',country, { 
+        maxAge: 60*10*1000 // 10 Minuten
+    });
+    res.cookie('ipCity',city, { 
+        maxAge: 60*10*1000 // 10 Minuten
+    });
+    res.send(ipInfo);
 })
 
 function generateUser(username='user',domain='@mail.local',count=1) {
