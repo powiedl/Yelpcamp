@@ -167,10 +167,11 @@ app.use(async(req,res,next) => {
     const jetzt=new Date().toJSON();
     //console.log('******************************************');
     //console.log(`${jetzt}: method=${req.method},url='${req.url}',originalUrl='${req.originalUrl}'`); // spannenderweise sind baseurl und originalurl "leer"
-    
+    console.log('req.socket.remoteAddress=',req.socket.remoteAddress);
+    console.log('req.header.x-forwarded-for=',req.header('x-forwarded-for') || []);
     const logEntry = new log();
     logEntry.originalUrl = req.originalUrl;
-    logEntry.ip = req.ip;
+    logEntry.ip = req.header('x-forwarded-for') || req.socket.remoteAddress;
     logEntry.method = req.method;
     logEntry.protocol = req.protocol;
     logEntry.timeStamp = jetzt;
@@ -196,6 +197,10 @@ app.get('/changelog', (req, res) => {
 app.get('/todos', (req, res) => {
     res.render('todos', { appVersion:appVersion })
 });
+app.get('/ipinfo',(req,res) => {
+    const ipinfo={remoteAddress:req.socket.remoteAddress,xForwardedFor:req.header('x-forwarded-for') || []};
+    res.send(ipinfo);
+})
 
 function generateUser(username='user',domain='@mail.local',count=1) {
     const repeatCharacters=4; // the first repeatCharacters will be randomly repeated in mailaddress
