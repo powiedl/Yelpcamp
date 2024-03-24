@@ -229,7 +229,9 @@ app.get('/logs',async(req,res) => {
     const logs = await log.find({});
     if (!isAdmin) {
         for (let log of logs) {
-            log.username = log.username.slice(0,1) + '***' + log.username.slice(-1);
+            if (log.username !== 'anonymous') {
+                log.username = log.username.slice(0,1) + '***' + log.username.slice(-1); 
+            } else log.username = '---'
         }
     }
     res.render('logs',{isAdmin,logs});
