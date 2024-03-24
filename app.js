@@ -26,7 +26,7 @@ const userRoutes = require('./routes/users');
 const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews');
 const { match } = require('assert');
-const appVersion = '24.323.1';
+const appVersion = '24.324.1';
 const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp2';
 console.log(`dbUrl ='${dbUrl}'`);
 
@@ -188,6 +188,13 @@ app.use(async(req,res,next) => {
     logEntry.city = city;
     await logEntry.save();
 
+    res.cookie('ipCountry',country, { 
+        maxAge: 60*10*1000 // 10 Minuten
+    });
+    res.cookie('ipCity',city, { 
+        maxAge: 60*10*1000 // 10 Minuten
+    });
+    
     //console.log(req.session);
     return next();
 })
@@ -214,15 +221,6 @@ app.get('/ipinfo',async (req,res) => {
     const {country,city} = await geoIpInfo(clientIp,req.cookies);
     console.log('country=',country,'city=',city);
     const ipInfo={clientIp: clientIp, otherIps:otherIps,country:country,city:city};
-    res.cookie('clientIp',clientIp, { 
-        maxAge: 60*10*1000 // 10 Minuten
-    });
-    res.cookie('ipCountry',country, { 
-        maxAge: 60*10*1000 // 10 Minuten
-    });
-    res.cookie('ipCity',city, { 
-        maxAge: 60*10*1000 // 10 Minuten
-    });
     res.send(ipInfo);
 })
 
