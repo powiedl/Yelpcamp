@@ -1,7 +1,6 @@
 const axios = require('axios');
 const jsonFile = require('jsonfile');
 const IPGeolocationAPI = require('ip-geolocation-api-javascript-sdk');
-const ipgeolocationApi = new IPGeolocationAPI(process.env.IPGEOLOCATION_API_KEY, true); 
 const GeolocationParams = require('ip-geolocation-api-javascript-sdk/GeolocationParams.js');
 
 
@@ -39,7 +38,7 @@ module.exports=async function (ip,cookies) {
         console.log('  ipGeolocationAPI fresh return: country_name=',country_name,'city=',city);
         return({country:country_name,city:city});
     } else {
-        console.log('  ipGeolocationAPI cached return: country_name=',country_name,'city=',city);
+//        console.log('  ipGeolocationAPI cached return: country_name=',country_name,'city=',city);
         return({country:country_name,city:city});
     }
 }
