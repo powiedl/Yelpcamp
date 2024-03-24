@@ -1,0 +1,42 @@
+<% layout('layouts/boilerplate') %>
+<div class="row">
+  <div class="container">
+    <% if (isAdmin) { %>
+    <h3>Logs - Admin View</h3>
+    <% } else { %>
+    <h3>Logs - General View</h3>
+    <% } %>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th scope="col">timestamp</th>
+                <th scope="col">method</th>
+                <th scope="col">URL</th>
+                <th scope="col">version</th>
+                <th scope="col">user</th>
+                <% if (isAdmin) { %>
+                    <th class="col">ip</th>
+                    <th class="col">country</th>
+                    <th class="col">city</th>
+                <% } %>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (log of logs) { %>
+                <tr>
+                    <td><%= log.timeStamp %></td>
+                    <td><%= log.method %></td>
+                    <td><%= log.originalUrl %></td>
+                    <td><%= log.appVersion %></td>
+                    <td><%= log.username %></td>
+                    <% if (isAdmin) { %>
+                        <td><%= log.clientIp %></td>
+                        <td><%= log.country %></td>
+                        <td><%= log.city %></td>
+                    <% } %>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+  </div>
+</div>

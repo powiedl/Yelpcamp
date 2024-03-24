@@ -224,6 +224,17 @@ app.get('/ipinfo',async (req,res) => {
     res.send(ipInfo);
 })
 
+app.get('/logs',async(req,res) => {
+    const {isAdmin}=req.query;
+    const logs = await log.find({});
+    if (!isAdmin) {
+        for (let log of logs) {
+            log.username = log.username.slice(0,1) + '***' + log.username.slice(-1);
+        }
+    }
+    res.render('logs',{isAdmin,logs});
+})
+
 function generateUser(username='user',domain='@mail.local',count=1) {
     const repeatCharacters=4; // the first repeatCharacters will be randomly repeated in mailaddress
     const maxRepetitions=5; // maximum number of repetitions for a single character
