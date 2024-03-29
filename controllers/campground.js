@@ -6,7 +6,7 @@ const axios = require('axios');
 // #region all campgrounds
 module.exports.index = async (req, res) => {
     const campgrounds = await Campground.find({});
-//    console.log('campgrounds[0].properties=',campgrounds[0].properties);
+    console.log('campgrounds[0].properties=',campgrounds[0].properties);
     res.render('campgrounds/index', { campgrounds })
 };
 

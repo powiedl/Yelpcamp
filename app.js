@@ -232,6 +232,12 @@ app.get('/logs',async(req,res) => {
             if (log.username !== 'anonymous') {
                 log.username = log.username.slice(0,1) + '***' + log.username.slice(-1); 
             } else log.username = '---'
+            log.timeStampString = log.timeStamp.getFullYear() +'-' +
+                (log.timeStamp.getMonth() <10 ? '0' : '') + log.timeStamp.getMonth() + '-' + 
+                (log.timeStamp.getDate() < 10 ? '0' : '') + log.timeStamp.getDate() + ' ' + 
+                (log.timeStamp.getHours() < 10 ? '0' : '') + log.timeStamp.getHours() + ':' + 
+                (log.timeStamp.getMinutes() < 10 ? '0' : '') + log.timeStamp.getMinutes() + ':' + 
+                (log.timeStamp.getSeconds() < 10 ? '0' : '') + log.timeStamp.getSeconds();
         }
     }
     res.render('logs',{isAdmin,logs});
