@@ -227,19 +227,20 @@ app.get('/ipinfo',async (req,res) => {
 app.get('/logs',async(req,res) => {
     const {isAdmin}=req.query;
     const logs = await log.find({});
-    if (!isAdmin) {
-        for (let log of logs) {
+    for (let log of logs) {
+        if (!isAdmin) {
             if (log.username !== 'anonymous') {
                 log.username = log.username.slice(0,1) + '***' + log.username.slice(-1); 
             } else log.username = '---'
-            log.timeStampString = log.timeStamp.getFullYear() +'-' +
-                (log.timeStamp.getMonth() <10 ? '0' : '') + log.timeStamp.getMonth() + '-' + 
-                (log.timeStamp.getDate() < 10 ? '0' : '') + log.timeStamp.getDate() + ' ' + 
-                (log.timeStamp.getHours() < 10 ? '0' : '') + log.timeStamp.getHours() + ':' + 
-                (log.timeStamp.getMinutes() < 10 ? '0' : '') + log.timeStamp.getMinutes() + ':' + 
-                (log.timeStamp.getSeconds() < 10 ? '0' : '') + log.timeStamp.getSeconds();
         }
+        log.timeStampString = log.timeStamp.getFullYear() +'-' +
+        (log.timeStamp.getMonth() <10 ? '0' : '') + log.timeStamp.getMonth() + '-' + 
+        (log.timeStamp.getDate() < 10 ? '0' : '') + log.timeStamp.getDate() + ' ' + 
+        (log.timeStamp.getHours() < 10 ? '0' : '') + log.timeStamp.getHours() + ':' + 
+        (log.timeStamp.getMinutes() < 10 ? '0' : '') + log.timeStamp.getMinutes() + ':' + 
+        (log.timeStamp.getSeconds() < 10 ? '0' : '') + log.timeStamp.getSeconds();
     }
+
     res.render('logs',{isAdmin,logs});
 })
 
