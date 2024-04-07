@@ -26,10 +26,6 @@ module.exports.renderShowForm = async (req, res) => {
             path: 'author'
         }
     }).populate('author');
-    if (campground.reviews) {
-//        const r=campground.reviews;
-//        console.dir(r);
-    }
     if (!campground) {
         req.flash('error','Cannot find that campground!');
         return res.redirect('/campgrounds');
