@@ -26,7 +26,7 @@ const userRoutes = require('./routes/users');
 const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews');
 const { match } = require('assert');
-const appVersion = '24.324.1';
+const appVersion = '24.407.1';
 const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp2';
 console.log(`dbUrl ='${dbUrl}'`);
 
@@ -233,8 +233,9 @@ app.get('/logs',async(req,res) => {
                 log.username = log.username.slice(0,1) + '***' + log.username.slice(-1); 
             } else log.username = '---'
         }
+        const logMonth = log.timeStamp.getMonth() + 1; // getMonth startet mit 0
         log.timeStampString = log.timeStamp.getFullYear() +'-' +
-        (log.timeStamp.getMonth() <10 ? '0' : '') + log.timeStamp.getMonth() + '-' + 
+        (logMonth <10 ? '0' : '') + logMonth + '-' + 
         (log.timeStamp.getDate() < 10 ? '0' : '') + log.timeStamp.getDate() + ' ' + 
         (log.timeStamp.getHours() < 10 ? '0' : '') + log.timeStamp.getHours() + ':' + 
         (log.timeStamp.getMinutes() < 10 ? '0' : '') + log.timeStamp.getMinutes() + ':' + 
