@@ -7,7 +7,8 @@ const reviewSchema = new Schema({
     author: {
         type: Schema.Types.ObjectId,
         ref: 'User'
-    }
+    },
+    timeStamp: Date,
 });
 
 module.exports = mongoose.model('Review',reviewSchema);

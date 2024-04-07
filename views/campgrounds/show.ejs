@@ -105,6 +105,9 @@ auch wenn es damit im Body und nicht mehr im HEAD steht - technisch erlaubt -->
           <div class="card mb-3 card-campground-bg-color">
             <div class="card-body">
               <h6 class="card-title"> <% if ( r.author ) { %> <%= r.author.showname %> <% } else { %>anonymous<% } %></h6>
+              <% if (r.timeStamp) { %> 
+                <h6 class="card-title"> <%= r.timeStamp %> </h6>  
+              <% } %>
               <p class="card-subtitle starability-result" data-rating="<%=r.rating%>">
                 Rated: <%=r.rating%> stars
               </p>
