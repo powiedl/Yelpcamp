@@ -103,13 +103,15 @@ auch wenn es damit im Body und nicht mehr im HEAD steht - technisch erlaubt -->
         for (let r of campground.reviews) { %>
           <div class="card mb-3 card-campground-bg-color">
             <div class="card-body">
-              <h6 class="card-title"> <% if ( r.author ) { %> <%= r.author.showname %> <% } else { %>anonymous<% } %></h6>
-              <% if (r.timeStamp) { %> 
-                <h7 class="card-title" id="rev_<%=r._id%>"> 
-                  <script>formatTimeStamp(<%= Math.floor(r.timeStamp.valueOf()/1000) %>, 'rev_<%=r._id%>' );</script>
-                </h7>  
-              <% } %>
-              <p class="card-subtitle starability-result" data-rating="<%=r.rating%>">
+              <div class="d-flex review-title">
+                <h6 class="card-title me-3"> <% if ( r.author ) { %> <%= r.author.showname %> <% } else { %>anonymous<% } %></h6>
+                <% if (r.timeStamp) { %> 
+                  <p class="card-title" id="rev_<%=r._id%>"> 
+                    <script>formatTimeStamp(<%= Math.floor(r.timeStamp.valueOf()/1000) %>, 'rev_<%=r._id%>' );</script>
+                  </p>  
+                <% } %>
+              </div>
+              <p class="card-subtitle starability-result mt-2" data-rating="<%=r.rating%>">
                 Rated: <%=r.rating%> stars
               </p>
               <p class="card-text"><%= r.body %></p>
