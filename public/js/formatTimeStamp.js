@@ -1,11 +1,16 @@
 function formatTimeStamp(t, id) {
-    console.log(`formatTimeStamp, id='${id}'`);
-    //console.log(`formatTimeStamp, t='${t}'`);
+    if (!id) {
+        console.log(`formatTimeStamp, id='${id}'`);
+        console.log(`formatTimeStamp, t='${t}'`);
+    }
     const timeStamp = new Date(t*1000);
-    //console.log(`formatTimeStamp, timeStamp='${timeStamp}'`);
+    if (!id) {
+        console.log(`formatTimeStamp, timeStamp='${timeStamp}'`);
+    }
     const months = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez']
     const now=new Date();
     let erg=''
+    const year = now.getFullYear() === timeStamp.getFullYear() ? '' : timeStamp.getFullYear()
     if (now.toDateString() === timeStamp.toDateString()) {
         erg='heute,';
     } else {
@@ -13,7 +18,7 @@ function formatTimeStamp(t, id) {
         if (now.toDateString() === timeStamp.toDateString()) {
             erg='gestern,';
         } else {
-            todayerg=`${timeStamp.getDate()}. ${months[timeStamp.getMonth]} ${t.getFullYear()}`
+            erg=`${timeStamp.getDate()}. ${months[timeStamp.getMonth()]} ${year}`.trim()
         }
     }
     const hours = timeStamp.getHours() < 10 ? '0' : '' + timeStamp.getHours();
@@ -25,7 +30,11 @@ function formatTimeStamp(t, id) {
         seconds = '';
     }
     erg=`${erg} ${hours}:${minutes}${seconds}`;
-    console.log(`formatTimeStamp, erg='${erg}'`);
-    document.querySelector('#' + id).innerText = erg;
+    //console.log(`formatTimeStamp, erg='${erg}'`);
+    if (id) {
+        document.querySelector('#' + id).innerText = erg;
+    } else {
+        console.log(`formatTimeStamp='${year}-${timeStamp.getMonth()}-${timeStamp.getDate()} ${hours}:${minutes}:${seconds}'`);
+    }
     return erg;
 }
