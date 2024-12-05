@@ -75,9 +75,6 @@ function generateUser(username='user',domain='@mail.local',count=1) {
 }
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp2', {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true
 });
 
 const db = mongoose.connection;
